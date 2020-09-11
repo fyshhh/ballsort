@@ -8,6 +8,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.PriorityQueue;
 import java.util.Scanner;
 
@@ -90,42 +91,49 @@ public class BallSort {
 
     public static class Tube {
 
-        private final List<Ball> balls;
-
-        public Tube() {
-            this.balls = new ArrayList<>();
-        }
+        private int ballCount = 0;
+        private final Ball[] balls = new Ball[4];
 
         public Tube(Ball ... balls) {
-            this.balls = new ArrayList<>(Arrays.asList(balls));
+            for (Ball b : balls) {
+                this.balls[ballCount++] = b;
+            }
         }
 
         public Tube clone() {
             Tube tube = new Tube();
             for (Ball b : this.balls) {
-                tube.push(b.clone());
+                if (b != null) {
+                    tube.push(b.clone());
+                }
             }
             return tube;
         }
 
         public boolean isEmpty() {
-            return this.balls.size() == 0;
+            return this.ballCount == 0;
         }
 
         public boolean isFull() {
-            return this.balls.size() == 4;
+            return this.ballCount == 4;
+        }
+
+        public int size() {
+            return this.ballCount;
         }
 
         public void push(Ball ball) {
-            this.balls.add(ball);
+            this.balls[this.ballCount++] = ball;
         }
 
         public Ball pop() {
-            return this.balls.remove(this.balls.size() - 1);
+            Ball ball = this.balls[--this.ballCount];
+            this.balls[this.ballCount] = null;
+            return ball;
         }
 
         public Ball peek() {
-            return this.balls.get(this.balls.size() - 1);
+            return this.balls[ballCount - 1];
         }
 
         public boolean canMoveTo(Tube tube) {
@@ -134,9 +142,9 @@ public class BallSort {
         }
 
         public boolean equals(Tube tube) {
-            if (this.balls.size() == tube.balls.size()) {
-                for (int i = 0; i < this.balls.size(); i++) {
-                    if (!this.balls.get(i).equals(tube.balls.get(i))) {
+            if (this.size() == tube.size()) {
+                for (int i = 0; i < this.size(); i++) {
+                    if (!this.balls[i].equals(tube.balls[i])) {
                         return false;
                     }
                 }
@@ -149,22 +157,20 @@ public class BallSort {
         public boolean isComplete() {
             return this.isEmpty()
                     || (this.isFull()
-                        && balls.get(0).equals(balls.get(1))
-                        && balls.get(0).equals(balls.get(2))
-                        && balls.get(0).equals(balls.get(3)));
-        }
-
-        public int size() {
-            return this.balls.size();
+                        && this.balls[0].equals(this.balls[1])
+                        && this.balls[0].equals(this.balls[2])
+                        && this.balls[0].equals(this.balls[3]));
         }
 
         public boolean validate() {
-            return balls.stream().allMatch(Ball::validate);
+            return Arrays.stream(this.balls)
+                    .filter(Objects::nonNull)
+                    .allMatch(Ball::validate);
         }
 
         @Override
         public String toString() {
-            return this.balls.toString();
+            return Arrays.toString(this.balls);
         }
 
     }
