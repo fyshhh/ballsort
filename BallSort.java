@@ -179,7 +179,6 @@ public class BallSort {
 
         private int tubeCount = 0;
         private final Tube[] tubes;
-//        private final List<Tube> tubes;
 
         public State(int num) {
             this.tubes = new Tube[num];
@@ -210,10 +209,12 @@ public class BallSort {
 
         @Override
         public int hashCode() {
-            return Arrays.hashCode(Arrays.stream(this.tubes)
-                        .map(Tube::size)
-                        .sorted()
-                        .toArray(Integer[]::new));
+            int[] hash = new int[this.tubes.length];
+            for (int i = 0; i < this.tubes.length; i++) {
+                hash[i] = this.tubes[i].size();
+            }
+            Arrays.sort(hash);
+            return Arrays.hashCode(hash);
         }
 
         @Override
