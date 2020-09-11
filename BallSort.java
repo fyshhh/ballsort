@@ -177,39 +177,40 @@ public class BallSort {
 
     public static class State {
 
-        private final List<Tube> tubes;
+        private int tubeCount = 0;
+        private final Tube[] tubes;
+//        private final List<Tube> tubes;
 
-        public State() {
-            this.tubes = new ArrayList<>();
+        public State(int num) {
+            this.tubes = new Tube[num];
         }
 
         public State(State state) {
-            this.tubes = new ArrayList<>();
+            this.tubes = new Tube[state.tubes.length];
             for (Tube tube : state.tubes) {
-                this.tubes.add(tube.clone());
+                this.addTube(tube.clone());
             }
         }
 
         public State addTube(Tube tube) {
-            this.tubes.add(tube);
+            this.tubes[tubeCount++] = tube;
             return this;
         }
 
         public boolean canMove(int tubeFrom, int tubeTo) {
-            return this.tubes.get(tubeFrom).canMoveTo(this.tubes.get(tubeTo));
+            return this.tubes[tubeFrom].canMoveTo(this.tubes[tubeTo]);
         }
 
         public State move(int tubeFrom, int tubeTo) {
             State state = new State(this);
-            Ball ball = state.tubes.get(tubeFrom).pop();
-            state.tubes.get(tubeTo).push(ball);
+            Ball ball = state.tubes[tubeFrom].pop();
+            state.tubes[tubeTo].push(ball);
             return state;
         }
 
         @Override
         public int hashCode() {
-            return Arrays.hashCode(
-                    tubes.stream()
+            return Arrays.hashCode(Arrays.stream(this.tubes)
                         .map(Tube::size)
                         .sorted()
                         .toArray(Integer[]::new));
@@ -218,25 +219,25 @@ public class BallSort {
         @Override
         public boolean equals(Object object) {
             return object instanceof State
-                    && tubes.stream()
-                    .allMatch(t -> ((State) object).tubes.stream().anyMatch(t::equals));
+                    && Arrays.stream(this.tubes)
+                    .allMatch(t -> Arrays.stream(((State) object).tubes).anyMatch(t::equals));
         }
 
         public boolean validate() {
-            return tubes.stream().allMatch(Tube::validate);
+            return Arrays.stream(this.tubes).allMatch(Tube::validate);
         }
 
         public boolean isComplete() {
-            return tubes.stream().allMatch(Tube::isComplete);
+            return Arrays.stream(this.tubes).allMatch(Tube::isComplete);
         }
 
         private int completeTubes() {
-            return (int) tubes.stream().filter(Tube::isComplete).count();
+            return (int) Arrays.stream(this.tubes).filter(Tube::isComplete).count();
         }
 
         @Override
         public String toString() {
-            return this.tubes.toString();
+            return Arrays.toString(this.tubes);
         }
 
     }
@@ -376,9 +377,9 @@ public class BallSort {
                 System.out.print("\nEnter file path here: ");
                 String filePath = sc.nextLine();
                 try {
-                    State state = new State();
                     BufferedReader br = new BufferedReader(new FileReader(filePath));
                     int num = Integer.parseInt(br.readLine());
+                    State state = new State(num);
                     for (int i = 0; i < num; i++) {
                         String string = br.readLine();
                         if (string != null) {
@@ -412,7 +413,7 @@ public class BallSort {
                 System.out.print("\nEnter the number of tubes: ");
                 int num = sc.nextInt();
                 sc.nextLine();
-                State state = new State();
+                State state = new State(num);
                 int count = 0;
                 while (count < num) {
                     System.out.printf("Enter the color of the balls for tube %d (bottom to top): ", count + 1);
