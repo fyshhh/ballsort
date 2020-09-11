@@ -333,73 +333,55 @@ public class BallSort {
                     }
                 }
 
-//                for (int i = 0; i < num; i++) {
-//                    System.out.printf("Enter the color of the balls for tube %d (bottom to top): ", i + 1);
-//                    String string = sc.nextLine();
-//                    if (string.equals("")) {
-//                        state.addTube(new Tube());
-//                    } else {
-//                        String[] input = string.split(" ");
-//                        Ball[] balls = new Ball[input.length];
-//                        for (int j = 0; j < input.length; j++) {
-//                            balls[j] = Ball.parse(input[j]);
-//                        }
-//                        state.addTube(new Tube(balls));
-//                    }
-//                }
-                if (!state.validate()) {
-                    System.out.println("Invalid ball input detected.");
-                } else {
-                    StopWatch sw = new StopWatch();
-                    sw.start();
+                StopWatch sw = new StopWatch();
+                sw.start();
 
-                    var steps = new PriorityQueue<Pair<State, List<Pair<Integer, Integer>>>>(
-                            (x, y) -> (y.fst.completeTubes() - x.fst.completeTubes()));
-                    var allStates = new HashSet<State>();
-                    List<Pair<Integer, Integer>> sol = null;
-                    steps.add(new Pair<>(state, new ArrayList<>()));
-                    while (!steps.isEmpty()) {
-                        var move = steps.poll();
-                        var currState = move.fst;
-                        var prevSteps = move.snd;
-                        if (currState.isComplete()) {
-                            sol = prevSteps;
-                            break;
-                        }
-                        for (int i = 0; i < num; i++) {
-                            for (int j = 0; j < num; j++) {
-                                if (i == j) {
-                                } else if (currState.canMove(i, j)) {
-                                    var newState = currState.move(i, j);
-                                    if (allStates.contains(newState)) {
-                                    } else {
-                                        var nextSteps = new ArrayList<>(prevSteps);
-                                        nextSteps.add(new Pair<>(i, j));
-                                        allStates.add(newState);
-                                        steps.add(new Pair<>(newState, nextSteps));
-                                    }
+                var steps = new PriorityQueue<Pair<State, List<Pair<Integer, Integer>>>>(
+                        (x, y) -> (y.fst.completeTubes() - x.fst.completeTubes()));
+                var allStates = new HashSet<State>();
+                List<Pair<Integer, Integer>> sol = null;
+                steps.add(new Pair<>(state, new ArrayList<>()));
+                while (!steps.isEmpty()) {
+                    var move = steps.poll();
+                    var currState = move.fst;
+                    var prevSteps = move.snd;
+                    if (currState.isComplete()) {
+                        sol = prevSteps;
+                        break;
+                    }
+                    for (int i = 0; i < num; i++) {
+                        for (int j = 0; j < num; j++) {
+                            if (i == j) {
+                            } else if (currState.canMove(i, j)) {
+                                var newState = currState.move(i, j);
+                                if (allStates.contains(newState)) {
+                                } else {
+                                    var nextSteps = new ArrayList<>(prevSteps);
+                                    nextSteps.add(new Pair<>(i, j));
+                                    allStates.add(newState);
+                                    steps.add(new Pair<>(newState, nextSteps));
                                 }
                             }
                         }
                     }
-                    if (sol == null) {
-                        System.out.println("No solution detected; likely due to input error.");
-                    } else {
-                        System.out.println();
-                        int index = 0;
-                        for (Pair<Integer, Integer> p : sol) {
-                            System.out.printf("%02d: Move from tube %d to %d\n", ++index, p.fst + 1, p.snd + 1);
-                            if (index % 5 == 0) {
-                                System.out.println();
-                            }
-                        }
-                        System.out.printf("\nShortest solution requires %d moves.", sol.size());
-                    }
-
-                    sw.stop();
-                    System.out.printf("\nIterated through %d states.\n", allStates.size());
-                    System.out.printf("Algorithm took %f seconds to run.\n", sw.getTime());
                 }
+                if (sol == null) {
+                    System.out.println("No solution detected; likely due to input error.");
+                } else {
+                    System.out.println();
+                    int index = 0;
+                    for (Pair<Integer, Integer> p : sol) {
+                        System.out.printf("%02d: Move from tube %d to %d\n", ++index, p.fst + 1, p.snd + 1);
+                        if (index % 5 == 0) {
+                            System.out.println();
+                        }
+                    }
+                    System.out.printf("\nShortest solution requires %d moves.", sol.size());
+                }
+
+                sw.stop();
+                System.out.printf("\nIterated through %d states.\n", allStates.size());
+                System.out.printf("Algorithm took %f seconds to run.\n", sw.getTime());
             } else {
                 System.out.println("Command invalid.");
             }
