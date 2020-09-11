@@ -239,7 +239,13 @@ public class BallSort {
         }
 
         public boolean validate() {
-            return Arrays.stream(this.tubes).allMatch(Tube::validate);
+            boolean allMatchBoolean = true;
+            int i = 0;
+            while (allMatchBoolean && i < this.tubes.length) {
+                allMatchBoolean = this.tubes[i].validate();
+                i++;
+            }
+            return allMatchBoolean;
         }
 
         public boolean isComplete() {
