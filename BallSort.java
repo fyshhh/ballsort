@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -163,6 +162,18 @@ public class BallSort {
         }
 
         public boolean validate() {
+            // for some odd reason, the stream method is faster
+//            boolean allMatchBoolean = true;
+//            int i = 0;
+//            while (allMatchBoolean && i < this.balls.length) {
+//                if (balls[i] == null) {
+//                    break;
+//                } else {
+//                    allMatchBoolean = balls[i].validate();
+//                    i++;
+//                }
+//            }
+//            return allMatchBoolean;
             return Arrays.stream(this.balls)
                     .filter(Objects::nonNull)
                     .allMatch(Ball::validate);
