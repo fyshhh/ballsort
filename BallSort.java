@@ -10,6 +10,7 @@ public class BallSort {
 
     public enum Color {
 
+        NIL,
         ORG,
         RED,
         BLU,
@@ -46,7 +47,7 @@ public class BallSort {
                 "pnk", Color.PNK,
                 "lgn", Color.LGN,
                 "gry", Color.GRY,
-                "lblß", Color.LBL
+                "lbl", Color.LBL
         );
 
         private final Color color;
@@ -64,7 +65,11 @@ public class BallSort {
         }
 
         public static Ball parse(String str) {
-            return new Ball(map.getOrDefault(str, Color.BLU));
+            return new Ball(map.getOrDefault(str, Color.NIL));
+        }
+
+        public boolean validate() {
+            return this.color != Color.NIL;
         }
 
         @Override
@@ -144,6 +149,10 @@ public class BallSort {
             return this.balls.size();
         }
 
+        public boolean validate() {
+            return balls.stream().allMatch(Ball::validate);
+        }
+
         @Override
         public String toString() {
             return this.balls.toString();
@@ -198,6 +207,10 @@ public class BallSort {
                     .allMatch(t -> ((State) object).tubes.stream().anyMatch(t::equals));
         }
 
+        public boolean validate() {
+            return tubes.stream().allMatch(Tube::validate);
+        }
+
         public boolean isComplete() {
             return tubes.stream().allMatch(Tube::isComplete);
         }
@@ -246,19 +259,6 @@ public class BallSort {
     }
 
     public static void main(String[] args) {
-
-//        Tube tube1 = new Tube(new Ball(Color.BLU), new Ball(Color.BLU));
-//        Tube tube2 = new Tube(new Ball(Color.RED), new Ball(Color.RED));
-//        Tube tube3 = new Tube();
-//
-//        State state1 = new State().addTube(tube1).addTube(tube3);
-//        System.out.println(state1.hashCode());
-//        State state2 = new State().addTube(tube3).addTube(tube2);
-//        System.out.println(state2.hashCode());
-//
-//        var set = new HashSet<State>();
-//        set.add(state1);
-//        System.out.println(set.contains(state2));
 
         Scanner sc = new Scanner(System.in);
         while (true) {
@@ -312,50 +312,58 @@ public class BallSort {
                         state.addTube(new Tube(balls));
                     }
                 }
+                if (!state.validate()) {
+                    System.out.println("Invalid ball input detected.");
+                } else {
+                    StopWatch sw = new StopWatch();
+                    sw.start();
 
-                StopWatch sw = new StopWatch();
-                sw.start();
-
-                var steps = new LinkedList<Pair<State, List<Pair<Integer, Integer>>>>();
-                var allStates = new HashSet<State>();
-                List<Pair<Integer, Integer>> sol = null;
-                steps.add(new Pair<>(state, new ArrayList<>()));
-                while (!steps.isEmpty()) {
-                    var move = steps.poll();
-                    var currState = move.fst;
-                    var prevSteps = move.snd;
-                    if (currState.isComplete()) {
-                        sol = prevSteps;
-                        break;
-                    }
-                    for (int i = 0; i < num; i++) {
-                        for (int j = 0; j < num; j++) {
-                            if (i == j) {
-                            } else if (currState.canMove(i, j)) {
-                                var newState = currState.move(i, j);
-                                if (allStates.contains(newState)) {
-                                } else {
-                                    var nextSteps = new ArrayList<>(prevSteps);
-                                    nextSteps.add(new Pair<>(i, j));
-                                    allStates.add(newState);
-                                    steps.add(new Pair<>(newState, nextSteps));
+                    var steps = new LinkedList<Pair<State, List<Pair<Integer, Integer>>>>();
+                    var allStates = new HashSet<State>();
+                    List<Pair<Integer, Integer>> sol = null;
+                    steps.add(new Pair<>(state, new ArrayList<>()));
+                    while (!steps.isEmpty()) {
+                        var move = steps.poll();
+                        var currState = move.fst;
+                        var prevSteps = move.snd;
+                        if (currState.isComplete()) {
+                            sol = prevSteps;
+                            break;
+                        }
+                        for (int i = 0; i < num; i++) {
+                            for (int j = 0; j < num; j++) {
+                                if (i == j) {
+                                } else if (currState.canMove(i, j)) {
+                                    var newState = currState.move(i, j);
+                                    if (allStates.contains(newState)) {
+                                    } else {
+                                        var nextSteps = new ArrayList<>(prevSteps);
+                                        nextSteps.add(new Pair<>(i, j));
+                                        allStates.add(newState);
+                                        steps.add(new Pair<>(newState, nextSteps));
+                                    }
                                 }
                             }
                         }
                     }
-                }
-                if (sol == null) {
-                    System.out.println("No solution detected; likely due to input error.");
-                } else {
-                    int index = 0;
-                    for (Pair<Integer, Integer> p : sol) {
-                        System.out.printf("%d: Move from tube %d to %d\n", ++index, p.fst + 1, p.snd + 1);
+                    if (sol == null) {
+                        System.out.println("No solution detected; likely due to input error.");
+                    } else {
+                        System.out.println();
+                        int index = 0;
+                        for (Pair<Integer, Integer> p : sol) {
+                            System.out.printf("%02d: Move from tube %d to %d\n", ++index, p.fst + 1, p.snd + 1);
+                            if (index % 5 == 0) {
+                                System.out.println();
+                            }
+                        }
+                        System.out.printf("Shortest solution requires %d moves.\n", sol.size());
                     }
+
+                    sw.stop();
+                    System.out.printf("Iterated through %d states.\n", allStates.size());
+                    System.out.printf("Algorithm took %f seconds to run.\n", sw.getTime());
                 }
-
-                sw.stop();
-                System.out.printf("Algorithm took %f seconds to run.\n", sw.getTime());
-
             } else {
                 System.out.println("Command invalid.");
             }
