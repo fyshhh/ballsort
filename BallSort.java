@@ -1,6 +1,7 @@
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -369,9 +370,36 @@ public class BallSort {
                 System.out.print("\nEnter file path here: ");
                 String filePath = sc.nextLine();
                 try {
+                    State state = new State();
                     BufferedReader br = new BufferedReader(new FileReader(filePath));
+                    int num = Integer.parseInt(br.readLine());
+                    for (int i = 0; i < num; i++) {
+                        String string = br.readLine();
+                        if (string != null) {
+                            String[] input = string.split(" ");
+                            Ball[] balls = new Ball[input.length];
+                            for (int j = 0; j < input.length; j++) {
+                                balls[j] = Ball.parse(input[j]);
+                            }
+                            if (Arrays.stream(balls).allMatch(Ball::validate)) {
+                                state.addTube(new Tube(balls));
+                            } else {
+                                System.out.println("Invalid input detected; try again.");
+                            }
+                        } else {
+                            state.addTube(new Tube());
+                        }
+                    }
+                    br.close();
+                    if (state.validate()) {
+                        sort(num, state);
+                    } else {
+                        System.out.println("Invalid input detected; try again.");
+                    }
                 } catch (FileNotFoundException e) {
                     System.out.println("No file detected.");
+                } catch (IOException e) {
+                    System.out.println("Something went wrong with the I/O; please try again.");
                 }
                 break;
             case "sort":
@@ -383,10 +411,7 @@ public class BallSort {
                 while (count < num) {
                     System.out.printf("Enter the color of the balls for tube %d (bottom to top): ", count + 1);
                     String string = sc.nextLine();
-                    if (string.equals("")) {
-                        state.addTube(new Tube());
-                        count++;
-                    } else {
+                    if (!string.equals("")) {
                         String[] input = string.split(" ");
                         Ball[] balls = new Ball[input.length];
                         for (int j = 0; j < input.length; j++) {
@@ -398,6 +423,9 @@ public class BallSort {
                         } else {
                             System.out.println("Invalid input detected; try again.");
                         }
+                    } else {
+                        state.addTube(new Tube());
+                        count++;
                     }
                 }
                 sort(num, state);
