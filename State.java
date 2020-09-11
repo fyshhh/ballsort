@@ -67,7 +67,9 @@ public class State {
         boolean allMatchBoolean = true;
         int i = 0;
         while (allMatchBoolean && i < this.tubes.length) {
-            allMatchBoolean = this.tubes[i].validate();
+            if (this.tubes[i] != null) {
+                allMatchBoolean = this.tubes[i].validate();
+            }
             i++;
         }
         return allMatchBoolean;

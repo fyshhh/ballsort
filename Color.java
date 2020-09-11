@@ -11,6 +11,8 @@ public enum Color {
     OLV,
     PRP,
     YLW,
-    NVY
+    NVY,
+    BRN,
+    LIM
 
 }

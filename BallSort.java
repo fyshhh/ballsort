@@ -91,7 +91,9 @@ public class BallSort {
                         "\"olv\" - olive,\n" +
                         "\"prp\" - purple\n" +
                         "\"ylw\" - yellow\n" +
-                        "\"nvy\" - navy\n");
+                        "\"nvy\" - navy\n" +
+                        "\"brn\" - brown\n" +
+                        "\"lim\" - lime\n");
                 System.out.println("Use \"code\" if you want to see the codes only.\n");
                 break;
             case "code":
@@ -106,7 +108,9 @@ public class BallSort {
                         "\"olv\" - olive,\n" +
                         "\"prp\" - purple\n" +
                         "\"ylw\" - yellow\n" +
-                        "\"nvy\" - navy\n");
+                        "\"nvy\" - navy\n" +
+                        "\"brn\" - brown\n" +
+                        "\"lim\" - lime\n");
                 break;
             case "load":
                 System.out.print("\nEnter file path here: ");
