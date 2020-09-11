@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="ballsort:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/ballsort_jar</output-path>
+    <root id="archive" name="ballsort.jar">
+      <element id="module-output" name="ballsort" />
+    </root>
+  </artifact>
+</component>
