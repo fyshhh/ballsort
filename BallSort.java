@@ -40,13 +40,13 @@ public class BallSort {
     public static class Ball {
 
         private static final Map<String, Color> map = Map.of(
-                "ORG", Color.ORG,
-                "RED", Color.RED,
-                "BLU", Color.BLU,
-                "PNK", Color.PNK,
-                "LGN", Color.LGN,
-                "GRY", Color.GRY,
-                "LBL", Color.LBL
+                "org", Color.ORG,
+                "red", Color.RED,
+                "blu", Color.BLU,
+                "pnk", Color.PNK,
+                "lgn", Color.LGN,
+                "gry", Color.GRY,
+                "lblß", Color.LBL
         );
 
         private final Color color;
@@ -267,31 +267,33 @@ public class BallSort {
             if (command.equals("exit")) {
                 break;
             } else if (command.equals("help")) {
-                System.out.println("Use exit to exit.");
-                System.out.println("Use solve to solve.");
+                System.out.println("Use \"exit\" to exit.");
+                System.out.println("Use \"sort\" to sort.");
                 System.out.println("When entering into the solver, use the following format, from bottom to top: ");
-                System.out.println("[CLR1]<space>[CLR2]<space>[CLR3]<space>[CLR4]");
+                System.out.println("\"[CLR1]<space>[CLR2]<space>[CLR3]<space>[CLR4]\"");
                 System.out.println("For instance, a tube with four blue balls should be:");
-                System.out.println("BLU BLU BLU BLU");
+                System.out.println("\"BLU BLU BLU BLU\"");
                 System.out.println("Here are the codes for colors: ");
-                System.out.println("\"ORG\" - orange,\n" +
-                        "\"RED\" - red,\n" +
-                        "\"BLU\" - blue,\n" +
-                        "\"PNK\" - pink,\n" +
-                        "\"LGN\" - light green,\n" +
-                        "\"GRY\" - grey,\n" +
-                        "\"LBL\" - light blue");
-                System.out.println("Use codes if you want to see the codes only.");
-            } else if (command.equals("codes")) {
+                System.out.println(
+                        "\"org\" - orange,\n" +
+                        "\"red\" - red,\n" +
+                        "\"blu\" - blue,\n" +
+                        "\"pnk\" - pink,\n" +
+                        "\"lgn\" - light green,\n" +
+                        "\"gry\" - grey,\n" +
+                        "\"lbl\" - light blue");
+                System.out.println("Use \"code\" if you want to see the codes only.");
+            } else if (command.equals("code")) {
                 System.out.println("Here are the codes for colors: ");
-                System.out.println("\"ORG\" - orange,\n" +
-                        "\"RED\" - red,\n" +
-                        "\"BLU\" - blue,\n" +
-                        "\"PNK\" - pink,\n" +
-                        "\"LGN\" - light green,\n" +
-                        "\"GRY\" - grey,\n" +
-                        "\"LBL\" - light blue");
-            } else if (command.equals("solve")) {
+                System.out.println(
+                        "\"org\" - orange,\n" +
+                        "\"red\" - red,\n" +
+                        "\"blu\" - blue,\n" +
+                        "\"pnk\" - pink,\n" +
+                        "\"lgn\" - light green,\n" +
+                        "\"gry\" - grey,\n" +
+                        "\"lbl\" - light blue");
+            } else if (command.equals("sort")) {
                 System.out.print("Enter the number of tubes: ");
                 int num = sc.nextInt();
                 sc.nextLine();
