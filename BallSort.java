@@ -219,9 +219,23 @@ public class BallSort {
 
         @Override
         public boolean equals(Object object) {
-            return object instanceof State
-                    && Arrays.stream(this.tubes)
-                    .allMatch(t -> Arrays.stream(((State) object).tubes).anyMatch(t::equals));
+            if (object instanceof State) {
+                boolean allMatchBoolean = true;
+                int i = 0;
+                while (allMatchBoolean && i < this.tubes.length) {
+                    int j = 0;
+                    boolean anyMatchBoolean = false;
+                    while (!anyMatchBoolean && j < ((State) object).tubes.length) {
+                        anyMatchBoolean = this.tubes[i].equals(((State) object).tubes[j]);
+                        j++;
+                    }
+                    allMatchBoolean = anyMatchBoolean;
+                    i++;
+                }
+                return allMatchBoolean;
+            } else {
+                return false;
+            }
         }
 
         public boolean validate() {
