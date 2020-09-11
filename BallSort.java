@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.PriorityQueue;
 import java.util.Scanner;
 
 public class BallSort {
@@ -219,6 +220,10 @@ public class BallSort {
             return tubes.stream().allMatch(Tube::isComplete);
         }
 
+        private int completeTubes() {
+            return (int) tubes.stream().filter(Tube::isComplete).count();
+        }
+
         @Override
         public String toString() {
             return this.tubes.toString();
@@ -326,7 +331,8 @@ public class BallSort {
                     StopWatch sw = new StopWatch();
                     sw.start();
 
-                    var steps = new LinkedList<Pair<State, List<Pair<Integer, Integer>>>>();
+                    var steps = new PriorityQueue<Pair<State, List<Pair<Integer, Integer>>>>(
+                            (x, y) -> (y.fst.completeTubes() - x.fst.completeTubes()));
                     var allStates = new HashSet<State>();
                     List<Pair<Integer, Integer>> sol = null;
                     steps.add(new Pair<>(state, new ArrayList<>()));
