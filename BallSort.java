@@ -5,9 +5,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.PriorityQueue;
 import java.util.Scanner;
 
@@ -90,42 +90,49 @@ public class BallSort {
 
     public static class Tube {
 
-        private final List<Ball> balls;
-
-        public Tube() {
-            this.balls = new ArrayList<>();
-        }
+        private int ballCount = 0;
+        private final Ball[] balls = new Ball[4];
 
         public Tube(Ball ... balls) {
-            this.balls = new ArrayList<>(Arrays.asList(balls));
+            for (Ball b : balls) {
+                this.balls[ballCount++] = b;
+            }
         }
 
         public Tube clone() {
             Tube tube = new Tube();
             for (Ball b : this.balls) {
-                tube.push(b.clone());
+                if (b != null) {
+                    tube.push(b.clone());
+                }
             }
             return tube;
         }
 
         public boolean isEmpty() {
-            return this.balls.size() == 0;
+            return this.ballCount == 0;
         }
 
         public boolean isFull() {
-            return this.balls.size() == 4;
+            return this.ballCount == 4;
+        }
+
+        public int size() {
+            return this.ballCount;
         }
 
         public void push(Ball ball) {
-            this.balls.add(ball);
+            this.balls[this.ballCount++] = ball;
         }
 
         public Ball pop() {
-            return this.balls.remove(this.balls.size() - 1);
+            Ball ball = this.balls[--this.ballCount];
+            this.balls[this.ballCount] = null;
+            return ball;
         }
 
         public Ball peek() {
-            return this.balls.get(this.balls.size() - 1);
+            return this.balls[ballCount - 1];
         }
 
         public boolean canMoveTo(Tube tube) {
@@ -134,9 +141,9 @@ public class BallSort {
         }
 
         public boolean equals(Tube tube) {
-            if (this.balls.size() == tube.balls.size()) {
-                for (int i = 0; i < this.balls.size(); i++) {
-                    if (!this.balls.get(i).equals(tube.balls.get(i))) {
+            if (this.size() == tube.size()) {
+                for (int i = 0; i < this.size(); i++) {
+                    if (!this.balls[i].equals(tube.balls[i])) {
                         return false;
                     }
                 }
@@ -149,88 +156,132 @@ public class BallSort {
         public boolean isComplete() {
             return this.isEmpty()
                     || (this.isFull()
-                        && balls.get(0).equals(balls.get(1))
-                        && balls.get(0).equals(balls.get(2))
-                        && balls.get(0).equals(balls.get(3)));
-        }
-
-        public int size() {
-            return this.balls.size();
+                        && this.balls[0].equals(this.balls[1])
+                        && this.balls[0].equals(this.balls[2])
+                        && this.balls[0].equals(this.balls[3]));
         }
 
         public boolean validate() {
-            return balls.stream().allMatch(Ball::validate);
+            // for some odd reason, the stream method is faster
+//            boolean allMatchBoolean = true;
+//            int i = 0;
+//            while (allMatchBoolean && i < this.balls.length) {
+//                if (balls[i] == null) {
+//                    break;
+//                } else {
+//                    allMatchBoolean = balls[i].validate();
+//                    i++;
+//                }
+//            }
+//            return allMatchBoolean;
+            return Arrays.stream(this.balls)
+                    .filter(Objects::nonNull)
+                    .allMatch(Ball::validate);
         }
 
         @Override
         public String toString() {
-            return this.balls.toString();
+            return Arrays.toString(this.balls);
         }
 
     }
 
     public static class State {
 
-        private final List<Tube> tubes;
+        private int tubeCount = 0;
+        private final Tube[] tubes;
 
-        public State() {
-            this.tubes = new ArrayList<>();
+        public State(int num) {
+            this.tubes = new Tube[num];
         }
 
         public State(State state) {
-            this.tubes = new ArrayList<>();
+            this.tubes = new Tube[state.tubes.length];
             for (Tube tube : state.tubes) {
-                this.tubes.add(tube.clone());
+                this.addTube(tube.clone());
             }
         }
 
         public State addTube(Tube tube) {
-            this.tubes.add(tube);
+            this.tubes[tubeCount++] = tube;
             return this;
         }
 
         public boolean canMove(int tubeFrom, int tubeTo) {
-            return this.tubes.get(tubeFrom).canMoveTo(this.tubes.get(tubeTo));
+            return this.tubes[tubeFrom].canMoveTo(this.tubes[tubeTo]);
         }
 
         public State move(int tubeFrom, int tubeTo) {
             State state = new State(this);
-            Ball ball = state.tubes.get(tubeFrom).pop();
-            state.tubes.get(tubeTo).push(ball);
+            Ball ball = state.tubes[tubeFrom].pop();
+            state.tubes[tubeTo].push(ball);
             return state;
         }
 
         @Override
         public int hashCode() {
-            return Arrays.hashCode(
-                    tubes.stream()
-                        .map(Tube::size)
-                        .sorted()
-                        .toArray(Integer[]::new));
+            int[] hash = new int[this.tubes.length];
+            for (int i = 0; i < this.tubes.length; i++) {
+                hash[i] = this.tubes[i].size();
+            }
+            Arrays.sort(hash);
+            return Arrays.hashCode(hash);
         }
 
         @Override
         public boolean equals(Object object) {
-            return object instanceof State
-                    && tubes.stream()
-                    .allMatch(t -> ((State) object).tubes.stream().anyMatch(t::equals));
+            if (object instanceof State) {
+                boolean allMatchBoolean = true;
+                int i = 0;
+                while (allMatchBoolean && i < this.tubes.length) {
+                    int j = 0;
+                    boolean anyMatchBoolean = false;
+                    while (!anyMatchBoolean && j < ((State) object).tubes.length) {
+                        anyMatchBoolean = this.tubes[i].equals(((State) object).tubes[j]);
+                        j++;
+                    }
+                    allMatchBoolean = anyMatchBoolean;
+                    i++;
+                }
+                return allMatchBoolean;
+            } else {
+                return false;
+            }
         }
 
         public boolean validate() {
-            return tubes.stream().allMatch(Tube::validate);
+            boolean allMatchBoolean = true;
+            int i = 0;
+            while (allMatchBoolean && i < this.tubes.length) {
+                allMatchBoolean = this.tubes[i].validate();
+                i++;
+            }
+            return allMatchBoolean;
         }
 
         public boolean isComplete() {
-            return tubes.stream().allMatch(Tube::isComplete);
+            boolean allMatchBoolean = true;
+            int i = 0;
+            while (allMatchBoolean && i < this.tubes.length) {
+                allMatchBoolean = this.tubes[i].isComplete();
+                i++;
+            }
+            return allMatchBoolean;
         }
 
         private int completeTubes() {
-            return (int) tubes.stream().filter(Tube::isComplete).count();
+            int count = 0;
+            for (Tube t : this.tubes) {
+                if (t.isComplete()) {
+                    count++;
+                }
+            }
+            return count;
         }
 
         @Override
         public String toString() {
-            return this.tubes.toString();
+            return Arrays.toString(this.tubes);
         }
 
     }
@@ -370,9 +421,9 @@ public class BallSort {
                 System.out.print("\nEnter file path here: ");
                 String filePath = sc.nextLine();
                 try {
-                    State state = new State();
                     BufferedReader br = new BufferedReader(new FileReader(filePath));
                     int num = Integer.parseInt(br.readLine());
+                    State state = new State(num);
                     for (int i = 0; i < num; i++) {
                         String string = br.readLine();
                         if (string != null) {
@@ -406,7 +457,7 @@ public class BallSort {
                 System.out.print("\nEnter the number of tubes: ");
                 int num = sc.nextInt();
                 sc.nextLine();
-                State state = new State();
+                State state = new State(num);
                 int count = 0;
                 while (count < num) {
                     System.out.printf("Enter the color of the balls for tube %d (bottom to top): ", count + 1);
