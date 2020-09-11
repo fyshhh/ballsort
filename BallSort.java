@@ -249,11 +249,23 @@ public class BallSort {
         }
 
         public boolean isComplete() {
-            return Arrays.stream(this.tubes).allMatch(Tube::isComplete);
+            boolean allMatchBoolean = true;
+            int i = 0;
+            while (allMatchBoolean && i < this.tubes.length) {
+                allMatchBoolean = this.tubes[i].isComplete();
+                i++;
+            }
+            return allMatchBoolean;
         }
 
         private int completeTubes() {
-            return (int) Arrays.stream(this.tubes).filter(Tube::isComplete).count();
+            int count = 0;
+            for (Tube t : this.tubes) {
+                if (t.isComplete()) {
+                    count++;
+                }
+            }
+            return count;
         }
 
         @Override
