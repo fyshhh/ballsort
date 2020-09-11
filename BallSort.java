@@ -311,20 +311,42 @@ public class BallSort {
                 int num = sc.nextInt();
                 sc.nextLine();
                 State state = new State();
-                for (int i = 0; i < num; i++) {
-                    System.out.printf("Enter the color of the balls for tube %d (bottom to top): ", i + 1);
+                int count = 0;
+                while (count < num) {
+                    System.out.printf("Enter the color of the balls for tube %d (bottom to top): ", count + 1);
                     String string = sc.nextLine();
                     if (string.equals("")) {
                         state.addTube(new Tube());
+                        count++;
                     } else {
                         String[] input = string.split(" ");
                         Ball[] balls = new Ball[input.length];
                         for (int j = 0; j < input.length; j++) {
                             balls[j] = Ball.parse(input[j]);
                         }
-                        state.addTube(new Tube(balls));
+                        if (Arrays.stream(balls).allMatch(Ball::validate)) {
+                            state.addTube(new Tube(balls));
+                            count++;
+                        } else {
+                            System.out.println("Invalid input detected; try again.");
+                        }
                     }
                 }
+
+//                for (int i = 0; i < num; i++) {
+//                    System.out.printf("Enter the color of the balls for tube %d (bottom to top): ", i + 1);
+//                    String string = sc.nextLine();
+//                    if (string.equals("")) {
+//                        state.addTube(new Tube());
+//                    } else {
+//                        String[] input = string.split(" ");
+//                        Ball[] balls = new Ball[input.length];
+//                        for (int j = 0; j < input.length; j++) {
+//                            balls[j] = Ball.parse(input[j]);
+//                        }
+//                        state.addTube(new Tube(balls));
+//                    }
+//                }
                 if (!state.validate()) {
                     System.out.println("Invalid ball input detected.");
                 } else {
@@ -371,11 +393,11 @@ public class BallSort {
                                 System.out.println();
                             }
                         }
-                        System.out.printf("Shortest solution requires %d moves.\n", sol.size());
+                        System.out.printf("\nShortest solution requires %d moves.", sol.size());
                     }
 
                     sw.stop();
-                    System.out.printf("Iterated through %d states.\n", allStates.size());
+                    System.out.printf("\nIterated through %d states.\n", allStates.size());
                     System.out.printf("Algorithm took %f seconds to run.\n", sw.getTime());
                 }
             } else {
