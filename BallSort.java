@@ -4,6 +4,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -20,11 +21,13 @@ public class BallSort {
         RED,
         BLU,
         PNK,
-        LGN,
+        GRN,
         GRY,
-        LBL,
+        SKY,
         OLV,
-        PRP
+        PRP,
+        YLW,
+        NVY
 
     }
 
@@ -47,17 +50,21 @@ public class BallSort {
 
     public static class Ball {
 
-        private static final Map<String, Color> map = Map.of(
-                "org", Color.ORG,
-                "red", Color.RED,
-                "blu", Color.BLU,
-                "pnk", Color.PNK,
-                "lgn", Color.LGN,
-                "gry", Color.GRY,
-                "lbl", Color.LBL,
-                "olv", Color.OLV,
-                "prp", Color.PRP
-        );
+        private static final Map<String, Color> map = new HashMap<>();
+
+        static {
+            map.put("org", Color.ORG);
+            map.put("red", Color.RED);
+            map.put("blu", Color.BLU);
+            map.put("pnk", Color.PNK);
+            map.put("grn", Color.GRN);
+            map.put("gry", Color.GRY);
+            map.put("sky", Color.SKY);
+            map.put("olv", Color.OLV);
+            map.put("prp", Color.PRP);
+            map.put("ylw", Color.YLW);
+            map.put("nvy", Color.NVY);
+        }
 
         private final Color color;
 
@@ -132,10 +139,21 @@ public class BallSort {
         }
 
         public Ball peek() {
-            return this.balls[ballCount - 1];
+            return this.balls[this.ballCount - 1];
         }
 
         public boolean canMoveTo(Tube tube) {
+//            if (this.isComplete() || this.isEmpty() || tube.isFull()) {
+//                return false;
+//            } else {
+//                if (!tube.isEmpty()) {
+//                    return this.peek().equals(tube.peek()) &&
+//                            (this.size() == 1 ||
+//                                !this.balls[this.ballCount - 1].equals(this.balls[this.ballCount - 2]));
+//                } else {
+//                    return true;
+//                }
+//            }
             return !this.isComplete() && !tube.isFull() &&
                     (tube.isEmpty() || tube.peek().equals(this.peek()));
         }
@@ -293,29 +311,29 @@ public class BallSort {
         long total = 0;
         boolean running = false;
 
-        StopWatch(){
+        StopWatch() {
             reset();
         }
 
-        void reset(){
+        void reset() {
             startTime = 0;
             endTime = 0;
             total = 0;
             running = false;
         }
 
-        void start(){
+        void start() {
             startTime = System.nanoTime();
             running = true;
         }
 
-        void stop(){
+        void stop() {
             endTime = System.nanoTime();
             total += (endTime - startTime);
             running = false;
         }
 
-        float getTime(){
+        float getTime() {
             float r = total;
             r /= 1000000000;
             return r;
@@ -365,7 +383,7 @@ public class BallSort {
                     System.out.println();
                 }
             }
-            System.out.printf("\nShortest solution requires %d moves.", sol.size());
+            System.out.printf("\nSolution requires %d moves.", sol.size());
         }
 
         sw.stop();
@@ -392,30 +410,32 @@ public class BallSort {
                 System.out.println("For instance, a tube with four blue balls should be:");
                 System.out.println("\"BLU BLU BLU BLU\"");
                 System.out.println("\nHere are the codes for colors: ");
-                System.out.println(
-                        "\"org\" - orange,\n" +
-                                "\"red\" - red,\n" +
-                                "\"blu\" - blue,\n" +
-                                "\"pnk\" - pink,\n" +
-                                "\"lgn\" - light green,\n" +
-                                "\"gry\" - grey,\n" +
-                                "\"lbl\" - light blue,\n" +
-                                "\"olv\" - olive,\n" +
-                                "\"prp\" - purple\n");
+                System.out.println("\"org\" - orange,\n" +
+                        "\"red\" - red,\n" +
+                        "\"blu\" - blue,\n" +
+                        "\"pnk\" - pink,\n" +
+                        "\"grn\" - green,\n" +
+                        "\"gry\" - grey,\n" +
+                        "\"sky\" - sky blue,\n" +
+                        "\"olv\" - olive,\n" +
+                        "\"prp\" - purple\n" +
+                        "\"ylw\" - yellow\n" +
+                        "\"nvy\" - navy\n");
                 System.out.println("Use \"code\" if you want to see the codes only.\n");
                 break;
             case "code":
                 System.out.println("\nHere are the codes for colors: ");
-                System.out.println(
-                        "\"org\" - orange,\n" +
-                                "\"red\" - red,\n" +
-                                "\"blu\" - blue,\n" +
-                                "\"pnk\" - pink,\n" +
-                                "\"lgn\" - light green,\n" +
-                                "\"gry\" - grey,\n" +
-                                "\"lbl\" - light blue,\n" +
-                                "\"olv\" - olive,\n" +
-                                "\"prp\" - purple\n");
+                System.out.println("\"org\" - orange,\n" +
+                        "\"red\" - red,\n" +
+                        "\"blu\" - blue,\n" +
+                        "\"pnk\" - pink,\n" +
+                        "\"grn\" - green,\n" +
+                        "\"gry\" - grey,\n" +
+                        "\"sky\" - sky blue,\n" +
+                        "\"olv\" - olive,\n" +
+                        "\"prp\" - purple\n" +
+                        "\"ylw\" - yellow\n" +
+                        "\"nvy\" - navy\n");
                 break;
             case "load":
                 System.out.print("\nEnter file path here: ");
