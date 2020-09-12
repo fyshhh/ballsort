@@ -64,10 +64,13 @@ public class BallSort {
 
     public static void main(String[] args) {
 
+        System.out.println("BallSort v1.0");
+        System.out.println("Use \"help\" to view commands.");
+
         Scanner sc = new Scanner(System.in);
         label:
         while (true) {
-            System.out.print("Enter a command (use help to view commands):");
+            System.out.print("Enter a command:");
             String command = sc.nextLine();
             switch (command) {
             case "exit":
