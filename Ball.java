@@ -19,6 +19,7 @@ public class Ball {
         map.put("nvy", Color.NVY);
         map.put("brn", Color.BRN);
         map.put("lim", Color.LIM);
+        map.put("wht", Color.WHT);
     }
 
     private final Color color;

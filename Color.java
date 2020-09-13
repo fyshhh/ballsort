@@ -13,6 +13,7 @@ public enum Color {
     YLW,
     NVY,
     BRN,
-    LIM
+    LIM,
+    WHT
 
 }

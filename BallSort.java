@@ -96,7 +96,8 @@ public class BallSort {
                         "\"ylw\" - yellow\n" +
                         "\"nvy\" - navy\n" +
                         "\"brn\" - brown\n" +
-                        "\"lim\" - lime\n");
+                        "\"lim\" - lime\n" +
+                        "\"wht\" - white\n");
                 System.out.println("Use \"code\" if you want to see the codes only.\n");
                 break;
             case "code":
@@ -113,7 +114,8 @@ public class BallSort {
                         "\"ylw\" - yellow\n" +
                         "\"nvy\" - navy\n" +
                         "\"brn\" - brown\n" +
-                        "\"lim\" - lime\n");
+                        "\"lim\" - lime\n" +
+                        "\"wht\" - white\n");
                 break;
             case "load":
                 System.out.print("\nEnter file path here: ");
