@@ -1,3 +1,9 @@
+/*
+Todo:
+Remove use of Integer pairs - optimize with custom structures
+Explore caching?
+ */
+
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;

@@ -1,3 +1,8 @@
+/*
+Todo:
+Change HashMap to EnumMap
+ */
+
 import java.util.HashMap;
 import java.util.Map;
 
