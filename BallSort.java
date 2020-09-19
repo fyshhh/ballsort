@@ -1,4 +1,5 @@
 /*
+v1.0 - 0.10-0.11s
 Todo:
 Remove use of Integer pairs - optimize with custom structures
 Explore caching?
