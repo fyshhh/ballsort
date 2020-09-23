@@ -1,9 +1,9 @@
 /*
-v1.0 - 0.10-0.11s
+v1.0 - input3 takes about 0.24 seconds on pc
 Todo:
 Remove use of Integer pairs - optimize with custom structures
 Explore caching?
-Use StringBuilders?
+Use StringBuilders? - about the same speed
  */
 
 import java.io.BufferedReader;
@@ -55,10 +55,22 @@ public class BallSort {
             System.out.println("No solution detected; likely due to input error.");
         } else {
             System.out.println();
-            int index = 0;
-            for (Pair<Integer, Integer> p : sol) {
-                System.out.printf("%02d: Move from tube %d to %d\n", ++index, p.fst() + 1, p.snd() + 1);
-                if (index % 5 == 0) {
+//            int index = 0;
+//            for (Pair<Integer, Integer> p : sol) {
+//                System.out.printf("%02d: Move from tube %d to %d\n", ++index, p.fst() + 1, p.snd() + 1);
+//                if (index % 5 == 0) {
+//                    System.out.println();
+//                }
+//            }
+            for (int i = 0; i < sol.size(); i++) {
+                StringBuilder sb = new StringBuilder(String.format("%02d", i + 1));
+                sb.append(": Move from tube ");
+                Pair<Integer, Integer> p = sol.get(i);
+                sb.append(p.fst() + 1);
+                sb.append(" to ");
+                sb.append(p.snd() + 1);
+                System.out.println(sb.toString());
+                if (i % 5 == 4) {
                     System.out.println();
                 }
             }
