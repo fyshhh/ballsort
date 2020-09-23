@@ -1,0 +1,13 @@
+14
+grn pnk red prp
+grn org red olv
+org grn brn gry
+pnk ylw prp pnk
+gry org blu olv
+blu olv ylw sky
+sky blu lim brn
+sky red blu gry
+brn org lim prp
+olv lim sky pnk
+grn ylw ylw gry
+prp lim red brn
